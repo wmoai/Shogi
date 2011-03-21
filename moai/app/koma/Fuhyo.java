@@ -15,10 +15,7 @@ public class Fuhyo extends Koma {
         preId = "fu";
         nariId = "to";
         id = preId;
-        init(te);
-    }
 
-    public void init(int te) {
         //イメージセット
         img = fu_img;
         //移動方向セット

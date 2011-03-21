@@ -3,7 +3,6 @@ package moai.app;
 import moai.app.koma.Koma;
 import util.MovablePoint;
 import android.graphics.Point;
-import android.util.Log;
 import android.view.MotionEvent;
 
 /**
@@ -118,12 +117,12 @@ public class ShogiLogic {
         //アップアクションの場合、駒を離す
         if (event.getAction() == MotionEvent.ACTION_UP) {
             if (masu == null) {
-                motigoma.addKoma(pickedKoma);
+                shogiBan.moveKoma(pickedKoma, pickedMasu, motigoma);
             } else if (!pickedKoma.field) {
                 //持ち駒の場合、設置（判定）
                 putKoma(masu);
             } else if (canMove(masu.point)) {
-                //新しい位置に下ろす
+                //出駒の場合で、設置可能な場合
                 nari(masu.point, app);
                 shogiBan.moveKoma(pickedKoma, masu, motigoma);
                 changeTurn();
@@ -269,7 +268,6 @@ public class ShogiLogic {
      * @return
      */
     private boolean isCorrectPlace(Point point) {
-        Log.v("PUT",point.x + "." + point.y);
         if (point.x < 0 || point.x > 8
          || point.y < 0 || point.y > 8) {
             return false;
@@ -290,12 +288,14 @@ public class ShogiLogic {
 
         if (pickedKoma.te == Koma.SENTE) {
             //先手成り判定
-            if (putPoint.y > 2) {
+            if (putPoint.y > 2 && pickedMasu.point.y > 2) {
+                //※成らない判定
                 return;
             }
         } else {
             //後手成り判定
-            if (putPoint.y < 6) {
+            if (putPoint.y < 6 && pickedMasu.point.y < 6) {
+                //※成らない判定
                 return;
             }
         }

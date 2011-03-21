@@ -9,7 +9,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.util.Log;
 import android.view.MotionEvent;
 
 public class Motigoma {
@@ -171,7 +170,6 @@ public class Motigoma {
         koma.change();
         koma.returnPre();
         koma.field = false;
-        Log.v("Motigoma","add");
         addKoma(koma);
     }
 

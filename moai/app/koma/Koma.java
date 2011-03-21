@@ -32,8 +32,8 @@ public abstract class Koma {
     public static final int GOTE = 1;
 
     public String id;
-    protected static String preId;
-    protected static String nariId;
+    protected String preId;
+    protected String nariId;
 
     /**
      * 駒画像をロードします。
@@ -155,6 +155,7 @@ public abstract class Koma {
         if (!canNari) {
             return;
         }
+
         //ID変更
         id = nariId;
         //イメージ変更
@@ -183,6 +184,5 @@ public abstract class Koma {
         canNari = true;
         mustReturnPre = false;
     }
-
 
 }
