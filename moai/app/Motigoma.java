@@ -33,7 +33,6 @@ public class Motigoma {
      * マス初期化
      */
     private void initMasu() {
-
         //先手
         //Xループ
         for (int i = 0; i < 4; i++) {
@@ -57,7 +56,6 @@ public class Motigoma {
                 masus.get(Koma.GOTE)[i][j] = masu;
             }
         }
-
     }
 
     /**
@@ -74,21 +72,14 @@ public class Motigoma {
      * @param koma 加える駒
      */
     public void addKoma(Koma koma) {
-
         for (Masu[] line : masus.get(koma.te)) {
             for (Masu masu : line) {
-                if (masu.getKoma() == null) {
+                if (masu.showKoma() == null || koma.id == masu.showKoma().id) {
                     masu.setKoma(koma);
-                    return;
-                }
-                if (koma.id == masu.getKoma().id) {
-                    masu.plusCount();
                     return;
                 }
             }
         }
-
-        return;
     }
 
     /**
@@ -112,7 +103,6 @@ public class Motigoma {
      * @param shogiLogic
      */
     public void drawMotigoma(Canvas canvas, ShogiLogic shogiLogic) {
-
         for (Entry<Integer, Masu[][]> box : masus.entrySet()) {
             for (Masu[] line : box.getValue()) {
                 for (Masu masu : line) {
@@ -120,8 +110,6 @@ public class Motigoma {
                 }
             }
         }
-
-
     }
 
 
@@ -133,33 +121,17 @@ public class Motigoma {
     public Masu getTouchedMasu(MotionEvent event) {
         int x = (int)event.getX();
         int y = (int)event.getY();
-
-//        for (Masu[] line : senteban) {
-//            for (Masu masu : line) {
-//                if (masu.isTouched(x, y)) {
-//                    return masu;
-//                }
-//            }
-//        }
-//        for (Masu[] line : goteban) {
-//            for (Masu masu : line) {
-//                if (masu.isTouched(x, y)) {
-//                    return masu;
-//                }
-//            }
-//        }
-
+        Masu result = null;
         for (Entry<Integer, Masu[][]> box : masus.entrySet()) {
             for (Masu[] line : box.getValue()) {
                 for (Masu masu : line) {
                     if (masu.isTouched(x, y)) {
-                        return masu;
+                        result = masu;
                     }
                 }
             }
         }
-
-        return null;
+        return result;
     }
 
     /**

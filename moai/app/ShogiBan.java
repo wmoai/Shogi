@@ -9,7 +9,6 @@ import moai.app.koma.Keima;
 import moai.app.koma.Kinsho;
 import moai.app.koma.Koma;
 import moai.app.koma.Kyosha;
-import util.KomaUtil;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -65,10 +64,8 @@ public class ShogiBan {
                 masu.x = LEFT + (i * MASU);
                 masu.y = TOP + (j * MASU);
                 masus[i][j] = masu;
-
             }
         }
-
         //初期配置
         setKoma(new Gyokusho(Koma.SENTE), 4, 8);
         setKoma(new Kinsho(Koma.SENTE), 3, 8);
@@ -111,7 +108,6 @@ public class ShogiBan {
         setKoma(new Fuhyo(Koma.GOTE), 6, 2);
         setKoma(new Fuhyo(Koma.GOTE), 7, 2);
         setKoma(new Fuhyo(Koma.GOTE), 8, 2);
-
     }
 
     /**
@@ -160,15 +156,7 @@ public class ShogiBan {
     public void drawKoma(Canvas canvas ,ShogiLogic shogiLogic) {
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
-                Koma koma = getMasu(i, j).getKoma();
-                if (koma == null) {
-                    continue;
-                }
-
-                canvas.drawBitmap(koma.getImage(),
-                        LEFT + (i * MASU) + KomaUtil.centeringX(koma),
-                        TOP + (j * MASU) + KomaUtil.centeringY(koma),
-                        null);
+                getMasu(i, j).drawKoma(canvas);
             }
         }
     }
@@ -193,7 +181,6 @@ public class ShogiBan {
     public Masu getTouchedMasu(MotionEvent event) {
         int x = (int)event.getX();
         int y = (int)event.getY();
-
         for (Masu[] line : masus) {
             for (Masu masu : line) {
                 if (masu.isTouched(x, y)) {
@@ -221,12 +208,12 @@ public class ShogiBan {
      * @param moti
      */
     public void moveKoma(Koma koma, Masu masu, Motigoma moti) {
-        Koma preKoma = masu.getKoma();
-
+        Koma preKoma = masu.pickKoma();
         //駒を取ります
         if (preKoma != null) {
             moti.killKoma(preKoma);
         }
+
         masu.setKoma(koma);
     }
 
@@ -247,20 +234,8 @@ public class ShogiBan {
      * @return
      */
     public Koma pickKoma(int x, int y) {
-        Koma koma = masus[x][y].getKoma();
-        masus[x][y].setKoma(null);
-
+        Koma koma = masus[x][y].pickKoma();
         return koma;
     }
 
-//    /**
-//     * 駒を取ります。
-//     * @param koma
-//     */
-//    public void killKoma(Koma koma) {
-//        koma.change();
-//        koma.returnPre();
-////        motigoma.addKoma(koma);
-//
-//    }
 }

@@ -85,8 +85,8 @@ public class ShogiLogic {
 
         //タッチマス取得
         Masu masu = shogiBan.getTouchedMasu(event);
-        if (masu != null && masu.getKoma() != null) {
-            if (masu.getKoma().te == te) {
+        if (masu != null && masu.showKoma() != null) {
+            if (masu.showKoma().te == te) {
                 //手番と一致する駒があれば持ち上げる
                 pickedKoma = masu.pickKoma();
                 pickedMasu = masu;
@@ -96,8 +96,8 @@ public class ShogiLogic {
 
         //持ち駒アクション
         Masu motiMasu = motigoma.getTouchedMasu(event);
-        if (motiMasu != null && motiMasu.getKoma() != null) {
-            if (motiMasu.getKoma().te == te) {
+        if (motiMasu != null && motiMasu.showKoma() != null) {
+            if (motiMasu.showKoma().te == te) {
                 //手番と一致する駒があれば持ち上げる
                 pickedKoma = motiMasu.pickKoma();
                 pickedMasu = motiMasu;
@@ -117,9 +117,13 @@ public class ShogiLogic {
         //アップアクションの場合、駒を離す
         if (event.getAction() == MotionEvent.ACTION_UP) {
             if (masu == null) {
-                shogiBan.moveKoma(pickedKoma, pickedMasu, motigoma);
+                if (!pickedKoma.field) {
+                    motigoma.addKoma(pickedKoma);
+                } else {
+                    shogiBan.moveKoma(pickedKoma, pickedMasu, motigoma);
+                }
             } else if (!pickedKoma.field) {
-                //持ち駒の場合、設置（判定）
+                //持駒の場合、設置（判定）
                 putKoma(masu);
             } else if (canMove(masu.point)) {
                 //出駒の場合で、設置可能な場合
@@ -183,7 +187,7 @@ public class ShogiLogic {
      */
     private boolean canPut(Point putPoint) {
         Masu masu = shogiBan.getMasu(putPoint.x, putPoint.y);
-        if (masu.getKoma() != null) {
+        if (masu.showKoma() != null) {
             return false;
         }
         return true;
@@ -226,11 +230,11 @@ public class ShogiLogic {
 
                 Masu masu = shogiBan.getMasu(pickedX, pickedY);
 
-                if (masu.getKoma() != null) {
+                if (masu.showKoma() != null) {
                     //駒がある場合
                     if (putPoint.x == pickedX
                      && putPoint.y == pickedY
-                     && masu.getKoma().te != pickedKoma.te) {
+                     && masu.showKoma().te != pickedKoma.te) {
                         //敵駒でその地点が目的地の場合OK
                         return true;
                     } else {
@@ -250,11 +254,11 @@ public class ShogiLogic {
                 && putPoint.y == pickedMasu.point.y + movablePoint.y) {
                 Masu masu = shogiBan.getMasu(putPoint.x, putPoint.y);
 
-                if (masu.getKoma() == null) {
+                if (masu.showKoma() == null) {
                     //駒が無ければOK
                     return true;
                 }
-                if (masu.getKoma().te != pickedKoma.te) {
+                if (masu.showKoma().te != pickedKoma.te) {
                     return true;
                 }
             }
